@@ -1,0 +1,15 @@
+syntax = "proto3";
+package order;
+
+service LogicalOptmizerApplyOrder {
+    rpc getApplyOrderRequest (ApplyOrderRequest) returns (ApplyOrderResponse) {};
+}
+
+message ApplyOrderRequest {
+    string sql = 1;
+}
+
+message ApplyOrderResponse {
+    string sql = 1;
+    string applyOrder = 2;
+}
