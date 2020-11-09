@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/PiotrNewt/duel/demo/optimizer/order"
+	"github.com/PiotrNewt/duel/demo_gRPC/optimizer/order"
 	"google.golang.org/grpc"
 )
 
