@@ -16,22 +16,22 @@ learning_rate = 0.001
 
 # MNIST dataset
 train_dataset = torchvision.datasets.MNIST(root='../../data',
-                                           train=True,
-                                           transform=transforms.ToTensor(),
-                                           download=True)
+                                            train=True,
+                                            transform=transforms.ToTensor(),
+                                            download=True)
 
 test_dataset = torchvision.datasets.MNIST(root='../../data',
-                                          train=False,
-                                          transform=transforms.ToTensor())
+                                            train=False,
+                                            transform=transforms.ToTensor())
 
 # data loader
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
-                                           batch_size=batch_size,
-                                           shuffle=True)
+                                            batch_size=batch_size,
+                                            shuffle=True)
 
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
-                                          batch_size=batch_size,
-                                          shuffle=True)
+                                            batch_size=batch_size,
+                                            shuffle=True)
 
 
 # 单隐藏层全连接神经网络
