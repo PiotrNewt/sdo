@@ -1,0 +1,21 @@
+syntax = "proto3";
+package lab;
+
+service AutoLogicalRulesApply {
+    rpc getNextApplyIdxRequest (NextApplyIdxRequest) returns (NextApplyIdxResponse) {};
+}
+
+message NextApplyIdxRequest {
+    string sqlFingerPrint = 1;
+    string sql = 2;
+    int64  reward = 3;
+    bool   isFinished = 4;
+    string plan = 5;
+    string flag = 6;
+}
+
+message NextApplyIdxResponse {
+    string sqlFingerPrint = 1;
+    string sql = 2;
+    int64  ruleIdx = 3;
+}
