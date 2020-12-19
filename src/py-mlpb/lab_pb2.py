@@ -15,11 +15,11 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='lab.proto',
-  package='lab',
+  package='mlpb',
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\tlab.proto\x12\x03lab\"z\n\x13NextApplyIdxRequest\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0b\n\x03sql\x18\x02 \x01(\t\x12\x0e\n\x06reward\x18\x03 \x01(\x03\x12\x12\n\nisFinished\x18\x04 \x01(\x08\x12\x0c\n\x04plan\x18\x05 \x01(\t\x12\x0c\n\x04\x66lag\x18\x06 \x01(\t\"L\n\x14NextApplyIdxResponse\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0b\n\x03sql\x18\x02 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x03 \x01(\x03\x32h\n\x15\x41utoLogicalRulesApply\x12O\n\x16getNextApplyIdxRequest\x12\x18.lab.NextApplyIdxRequest\x1a\x19.lab.NextApplyIdxResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\tlab.proto\x12\x04mlpb\"z\n\x13NextApplyIdxRequest\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0b\n\x03sql\x18\x02 \x01(\t\x12\x0e\n\x06reward\x18\x03 \x01(\x03\x12\x12\n\nisFinished\x18\x04 \x01(\x08\x12\x0c\n\x04plan\x18\x05 \x01(\t\x12\x0c\n\x04\x66lag\x18\x06 \x01(\t\"L\n\x14NextApplyIdxResponse\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0b\n\x03sql\x18\x02 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x03 \x01(\x03\x32j\n\x15\x41utoLogicalRulesApply\x12Q\n\x16getNextApplyIdxRequest\x12\x19.mlpb.NextApplyIdxRequest\x1a\x1a.mlpb.NextApplyIdxResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -27,49 +27,49 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _NEXTAPPLYIDXREQUEST = _descriptor.Descriptor(
   name='NextApplyIdxRequest',
-  full_name='lab.NextApplyIdxRequest',
+  full_name='mlpb.NextApplyIdxRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='sqlFingerPrint', full_name='lab.NextApplyIdxRequest.sqlFingerPrint', index=0,
+      name='sqlFingerPrint', full_name='mlpb.NextApplyIdxRequest.sqlFingerPrint', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='sql', full_name='lab.NextApplyIdxRequest.sql', index=1,
+      name='sql', full_name='mlpb.NextApplyIdxRequest.sql', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='reward', full_name='lab.NextApplyIdxRequest.reward', index=2,
+      name='reward', full_name='mlpb.NextApplyIdxRequest.reward', index=2,
       number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='isFinished', full_name='lab.NextApplyIdxRequest.isFinished', index=3,
+      name='isFinished', full_name='mlpb.NextApplyIdxRequest.isFinished', index=3,
       number=4, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='plan', full_name='lab.NextApplyIdxRequest.plan', index=4,
+      name='plan', full_name='mlpb.NextApplyIdxRequest.plan', index=4,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='flag', full_name='lab.NextApplyIdxRequest.flag', index=5,
+      name='flag', full_name='mlpb.NextApplyIdxRequest.flag', index=5,
       number=6, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -87,35 +87,35 @@ _NEXTAPPLYIDXREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=18,
-  serialized_end=140,
+  serialized_start=19,
+  serialized_end=141,
 )
 
 
 _NEXTAPPLYIDXRESPONSE = _descriptor.Descriptor(
   name='NextApplyIdxResponse',
-  full_name='lab.NextApplyIdxResponse',
+  full_name='mlpb.NextApplyIdxResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='sqlFingerPrint', full_name='lab.NextApplyIdxResponse.sqlFingerPrint', index=0,
+      name='sqlFingerPrint', full_name='mlpb.NextApplyIdxResponse.sqlFingerPrint', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='sql', full_name='lab.NextApplyIdxResponse.sql', index=1,
+      name='sql', full_name='mlpb.NextApplyIdxResponse.sql', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='ruleIdx', full_name='lab.NextApplyIdxResponse.ruleIdx', index=2,
+      name='ruleIdx', full_name='mlpb.NextApplyIdxResponse.ruleIdx', index=2,
       number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -133,8 +133,8 @@ _NEXTAPPLYIDXRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=142,
-  serialized_end=218,
+  serialized_start=143,
+  serialized_end=219,
 )
 
 DESCRIPTOR.message_types_by_name['NextApplyIdxRequest'] = _NEXTAPPLYIDXREQUEST
@@ -144,14 +144,14 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 NextApplyIdxRequest = _reflection.GeneratedProtocolMessageType('NextApplyIdxRequest', (_message.Message,), {
   'DESCRIPTOR' : _NEXTAPPLYIDXREQUEST,
   '__module__' : 'lab_pb2'
-  # @@protoc_insertion_point(class_scope:lab.NextApplyIdxRequest)
+  # @@protoc_insertion_point(class_scope:mlpb.NextApplyIdxRequest)
   })
 _sym_db.RegisterMessage(NextApplyIdxRequest)
 
 NextApplyIdxResponse = _reflection.GeneratedProtocolMessageType('NextApplyIdxResponse', (_message.Message,), {
   'DESCRIPTOR' : _NEXTAPPLYIDXRESPONSE,
   '__module__' : 'lab_pb2'
-  # @@protoc_insertion_point(class_scope:lab.NextApplyIdxResponse)
+  # @@protoc_insertion_point(class_scope:mlpb.NextApplyIdxResponse)
   })
 _sym_db.RegisterMessage(NextApplyIdxResponse)
 
@@ -159,17 +159,17 @@ _sym_db.RegisterMessage(NextApplyIdxResponse)
 
 _AUTOLOGICALRULESAPPLY = _descriptor.ServiceDescriptor(
   name='AutoLogicalRulesApply',
-  full_name='lab.AutoLogicalRulesApply',
+  full_name='mlpb.AutoLogicalRulesApply',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=220,
-  serialized_end=324,
+  serialized_start=221,
+  serialized_end=327,
   methods=[
   _descriptor.MethodDescriptor(
     name='getNextApplyIdxRequest',
-    full_name='lab.AutoLogicalRulesApply.getNextApplyIdxRequest',
+    full_name='mlpb.AutoLogicalRulesApply.getNextApplyIdxRequest',
     index=0,
     containing_service=None,
     input_type=_NEXTAPPLYIDXREQUEST,

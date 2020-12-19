@@ -21,6 +21,7 @@ class service(lab_pb2_grpc.AutoLogicalRulesApplyServicer):
             self.worker = worker()
 
         # TODO: code for training.
+        print("get the rq: {}".format(request.sql))
 
         return lab_pb2.NextApplyIdxResponse(
             sqlFingerPrint = request.sqlFingerPrint,

@@ -15,7 +15,7 @@ class AutoLogicalRulesApplyStub(object):
             channel: A grpc.Channel.
         """
         self.getNextApplyIdxRequest = channel.unary_unary(
-                '/lab.AutoLogicalRulesApply/getNextApplyIdxRequest',
+                '/mlpb.AutoLogicalRulesApply/getNextApplyIdxRequest',
                 request_serializer=lab__pb2.NextApplyIdxRequest.SerializeToString,
                 response_deserializer=lab__pb2.NextApplyIdxResponse.FromString,
                 )
@@ -40,7 +40,7 @@ def add_AutoLogicalRulesApplyServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'lab.AutoLogicalRulesApply', rpc_method_handlers)
+            'mlpb.AutoLogicalRulesApply', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -59,7 +59,7 @@ class AutoLogicalRulesApply(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/lab.AutoLogicalRulesApply/getNextApplyIdxRequest',
+        return grpc.experimental.unary_unary(request, target, '/mlpb.AutoLogicalRulesApply/getNextApplyIdxRequest',
             lab__pb2.NextApplyIdxRequest.SerializeToString,
             lab__pb2.NextApplyIdxResponse.FromString,
             options, channel_credentials,
