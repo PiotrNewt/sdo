@@ -31,7 +31,7 @@ class service(lab_pb2_grpc.AutoLogicalRulesApplyServicer):
 
 # thread pool = num of cpu cores
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()))
-lab_pb2_grpc.add_LogicalOptmizerApplyOrderServicer_to_server(service(), server)
+lab_pb2_grpc.add_AutoLogicalRulesApplyServicer_to_server(service(), server)
 
 # set service port
 server.add_insecure_port(port)
