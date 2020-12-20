@@ -17,6 +17,11 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
+import (
+	context "golang.org/x/net/context"
+	grpc "google.golang.org/grpc"
+)
+
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -122,6 +127,79 @@ func init() {
 	proto.RegisterType((*NextApplyIdxRequest)(nil), "mlpb.NextApplyIdxRequest")
 	proto.RegisterType((*NextApplyIdxResponse)(nil), "mlpb.NextApplyIdxResponse")
 }
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// Client API for AutoLogicalRulesApply service
+
+type AutoLogicalRulesApplyClient interface {
+	GetNextApplyIdxRequest(ctx context.Context, in *NextApplyIdxRequest, opts ...grpc.CallOption) (*NextApplyIdxResponse, error)
+}
+
+type autoLogicalRulesApplyClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewAutoLogicalRulesApplyClient(cc *grpc.ClientConn) AutoLogicalRulesApplyClient {
+	return &autoLogicalRulesApplyClient{cc}
+}
+
+func (c *autoLogicalRulesApplyClient) GetNextApplyIdxRequest(ctx context.Context, in *NextApplyIdxRequest, opts ...grpc.CallOption) (*NextApplyIdxResponse, error) {
+	out := new(NextApplyIdxResponse)
+	err := grpc.Invoke(ctx, "/mlpb.AutoLogicalRulesApply/getNextApplyIdxRequest", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for AutoLogicalRulesApply service
+
+type AutoLogicalRulesApplyServer interface {
+	GetNextApplyIdxRequest(context.Context, *NextApplyIdxRequest) (*NextApplyIdxResponse, error)
+}
+
+func RegisterAutoLogicalRulesApplyServer(s *grpc.Server, srv AutoLogicalRulesApplyServer) {
+	s.RegisterService(&_AutoLogicalRulesApply_serviceDesc, srv)
+}
+
+func _AutoLogicalRulesApply_GetNextApplyIdxRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NextApplyIdxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AutoLogicalRulesApplyServer).GetNextApplyIdxRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/mlpb.AutoLogicalRulesApply/GetNextApplyIdxRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AutoLogicalRulesApplyServer).GetNextApplyIdxRequest(ctx, req.(*NextApplyIdxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _AutoLogicalRulesApply_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "mlpb.AutoLogicalRulesApply",
+	HandlerType: (*AutoLogicalRulesApplyServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "getNextApplyIdxRequest",
+			Handler:    _AutoLogicalRulesApply_GetNextApplyIdxRequest_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "lab.proto",
+}
+
 func (m *NextApplyIdxRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
