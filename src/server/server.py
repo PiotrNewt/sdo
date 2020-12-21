@@ -1,6 +1,6 @@
 import grpc
-import lab_pb2
-import lab_pb2_grpc
+import pymlpb.lab_pb2 as lab_pb2
+import pymlpb.lab_pb2_grpc as lab_pb2_grpc
 import time
 import multiprocessing
 
