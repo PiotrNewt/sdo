@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='mlpb',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\tlab.proto\x12\x04mlpb\"z\n\x13NextApplyIdxRequest\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0b\n\x03sql\x18\x02 \x01(\t\x12\x0e\n\x06reward\x18\x03 \x01(\x03\x12\x12\n\nisFinished\x18\x04 \x01(\x08\x12\x0c\n\x04plan\x18\x05 \x01(\t\x12\x0c\n\x04\x66lag\x18\x06 \x01(\t\"L\n\x14NextApplyIdxResponse\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0b\n\x03sql\x18\x02 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x03 \x01(\x03\x32j\n\x15\x41utoLogicalRulesApply\x12Q\n\x16getNextApplyIdxRequest\x12\x19.mlpb.NextApplyIdxRequest\x1a\x1a.mlpb.NextApplyIdxResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\tlab.proto\x12\x04mlpb\"t\n\x13NextApplyIdxRequest\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0b\n\x03sql\x18\x02 \x01(\t\x12\x0e\n\x06reward\x18\x03 \x01(\x03\x12\x0c\n\x04\x64one\x18\x04 \x01(\x08\x12\x0c\n\x04plan\x18\x05 \x01(\t\x12\x0c\n\x04\x66lag\x18\x06 \x01(\t\"?\n\x14NextApplyIdxResponse\x12\x16\n\x0esqlFingerPrint\x18\x01 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x02 \x01(\x03\x32j\n\x15\x41utoLogicalRulesApply\x12Q\n\x16getNextApplyIdxRequest\x12\x19.mlpb.NextApplyIdxRequest\x1a\x1a.mlpb.NextApplyIdxResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -55,7 +55,7 @@ _NEXTAPPLYIDXREQUEST = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='isFinished', full_name='mlpb.NextApplyIdxRequest.isFinished', index=3,
+      name='done', full_name='mlpb.NextApplyIdxRequest.done', index=3,
       number=4, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -88,7 +88,7 @@ _NEXTAPPLYIDXREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=141,
+  serialized_end=135,
 )
 
 
@@ -107,15 +107,8 @@ _NEXTAPPLYIDXRESPONSE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='sql', full_name='mlpb.NextApplyIdxResponse.sql', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='ruleIdx', full_name='mlpb.NextApplyIdxResponse.ruleIdx', index=2,
-      number=3, type=3, cpp_type=2, label=1,
+      name='ruleIdx', full_name='mlpb.NextApplyIdxResponse.ruleIdx', index=1,
+      number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -132,8 +125,8 @@ _NEXTAPPLYIDXRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=143,
-  serialized_end=219,
+  serialized_start=137,
+  serialized_end=200,
 )
 
 DESCRIPTOR.message_types_by_name['NextApplyIdxRequest'] = _NEXTAPPLYIDXREQUEST
@@ -162,8 +155,8 @@ _AUTOLOGICALRULESAPPLY = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=221,
-  serialized_end=327,
+  serialized_start=202,
+  serialized_end=308,
   methods=[
   _descriptor.MethodDescriptor(
     name='getNextApplyIdxRequest',

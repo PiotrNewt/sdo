@@ -9,13 +9,12 @@ message NextApplyIdxRequest {
     string sqlFingerPrint = 1;
     string sql = 2;
     int64  reward = 3;
-    bool   isFinished = 4;
+    bool   done = 4;
     string plan = 5;
     string flag = 6;
 }
 
 message NextApplyIdxResponse {
     string sqlFingerPrint = 1;
-    string sql = 2;
-    int64  ruleIdx = 3;
+    int64  ruleIdx = 2;
 }

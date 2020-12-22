@@ -1,11 +1,11 @@
 import grpc
-import pymlpb.lab_pb2 as lab_pb2
-import pymlpb.lab_pb2_grpc as lab_pb2_grpc
+# import lab_pb2
+import lab_pb2_grpc
 import time
 import multiprocessing
 
 from concurrent import futures
-from worker import worker
+from worker import Worker
 
 # config
 port = "localhost:50051"
@@ -13,20 +13,16 @@ port = "localhost:50051"
 class service(lab_pb2_grpc.AutoLogicalRulesApplyServicer):
     # init
     def __init__(self):
-        self.worker = worker()
+        self.worker = Worker()
 
     # imp rpc func
     def getNextApplyIdxRequest(self, request, context):
         if self.worker is None:
-            self.worker = worker()
+            self.worker = Worker()
 
-        # TODO: code for training.
-        print("get the rq: {}".format(request.sql))
-
-        return lab_pb2.NextApplyIdxResponse(
-            sqlFingerPrint = request.sqlFingerPrint,
-            sql = request.sql
-        )
+        # TODO: code for handle request.
+        response = self.worker.handleReq(request)
+        return response
 
 
 # thread pool = num of cpu cores
