@@ -16,9 +16,10 @@ class Worker(object):
         self.eps = 1.0
         self.handleSQL = ""
         self.i_episode = 0
+        self.idxSeq = []
 
     def printInfo(self, request):
-        print("---------\ndone:\t{}\nsql:\t{}\nreward:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}\n".format(
+        print("---------\ndone:\t{}\nsql:\t{}\nreward:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}".format(
             request.done,
             request.sql,
             request.reward,
@@ -61,6 +62,8 @@ class Worker(object):
         res = lab_pb2.NextApplyIdxResponse(
             sql = self.handleSQL,
         )
+        print("*idxSeq*:\t{}\n".format(self.idxSeq))
+        self.idxSeq = []
         self.handleSQL = ""
         if self.i_episode % 10 == 0:
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.i_episode, np.mean(self.scores_window)))
@@ -68,6 +71,8 @@ class Worker(object):
 
     # respense the rule index request with action(idx)
     def env_step(self, action):
+        print("*idx*:\t{}\n".format(action))
+        self.idxSeq.append(action)
         return lab_pb2.NextApplyIdxResponse(
             sql = self.handleSQL,
             ruleIdx = action
@@ -100,7 +105,7 @@ class Worker(object):
 
     # recursiveDeserialize recursive make strs to tree
     def recursiveDeserialize(self, i, strs):
-        if i >= len(strs) or strs[i] == "#":
+        if i >= len(strs) or strs[i] == "#" or strs[i] == "":
             return None
 
         node = (self.feature2vec(int(strs[i])),)
