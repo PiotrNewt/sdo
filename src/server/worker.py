@@ -14,22 +14,35 @@ class Worker(object):
         self.scores_window = deque(maxlen=100)
         self.score = 0
         self.eps = 1.0
-        self.handleKey = ""
+        self.handleSQL = ""
         self.i_episode = 0
 
+    def printInfo(self, request):
+        print("---------\ndone:\t{}\nsql:\t{}\nreward:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}\n".format(
+            request.done,
+            request.sql,
+            request.reward,
+            request.plan,
+            self.i_episode,
+            self.score
+        ))
+        
     # handleReq handle the request from DB(Client).
-    # and if it is the first time for sql to request, we set a handleKey which is a random str form DB.
+    # and if it is the first time for sql to request, we set a handleSQL which is the sql form DB.
     # and we clean the random key when sql done.
-    def handlerReq(self, request):
-        if self.handleKey != "" and self.handleKey != request.sqlFingerPrint:
+    def handleReq(self, request):
+        print("handling")
+        if self.handleSQL != "" and self.handleSQL != request.sql:
             # TODO: if a sql put in busy work, we do not process it.
             return None
 
-        if self.handleKey == "":
-            self.env_reset(request.sqlFingerPrint)
+        if self.handleSQL == "":
+            self.env_reset(request.sql)
 
         # sync last step reward
         self.score += request.reward
+
+        self.printInfo(request)
 
         # if done, we just add last reward
         if request.done:
@@ -46,9 +59,9 @@ class Worker(object):
         self.scores.append(self.score)
         self.eps = max(0.01, 0.995*self.eps)
         res = lab_pb2.NextApplyIdxResponse(
-            sqlFingerPrint = self.handleKey,
+            sql = self.handleSQL,
         )
-        self.handleKey = ""
+        self.handleSQL = ""
         if self.i_episode % 10 == 0:
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.i_episode, np.mean(self.scores_window)))
         return res
@@ -56,12 +69,12 @@ class Worker(object):
     # respense the rule index request with action(idx)
     def env_step(self, action):
         return lab_pb2.NextApplyIdxResponse(
-            sqlFingerPrint = self.handleKey,
+            sql = self.handleSQL,
             ruleIdx = action
         )
 
-    def env_reset(self, key):
-        self.handleKey = key
+    def env_reset(self, sql):
+        self.handleSQL = sql
         self.score = 0
         self.i_episode += 1
 

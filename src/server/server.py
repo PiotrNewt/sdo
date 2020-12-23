@@ -8,19 +8,20 @@ from concurrent import futures
 from worker import Worker
 
 # config
-port = "localhost:50051"
+port = "127.0.0.1:50051"
 
 class service(lab_pb2_grpc.AutoLogicalRulesApplyServicer):
     # init
     def __init__(self):
+        print("server generating...")
         self.worker = Worker()
+        print("done\nlistening...")
 
     # imp rpc func
     def getNextApplyIdxRequest(self, request, context):
         if self.worker is None:
             self.worker = Worker()
 
-        # TODO: code for handle request.
         response = self.worker.handleReq(request)
         return response
 
