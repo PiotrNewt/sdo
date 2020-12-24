@@ -7,7 +7,7 @@ service AutoLogicalRulesApply {
 
 message NextApplyIdxRequest {
     string sql = 1;
-    int64  reward = 2;
+    double latency = 2;
     bool   done = 3;
     string plan = 4;
     string flag = 5;

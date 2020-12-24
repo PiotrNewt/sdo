@@ -15,7 +15,7 @@ class service(lab_pb2_grpc.AutoLogicalRulesApplyServicer):
     def __init__(self):
         print("server generating...")
         self.worker = Worker()
-        print("done\nlistening...")
+        print("done! port:[{}]\nlistening...".format(port))
 
     # imp rpc func
     def getNextApplyIdxRequest(self, request, context):

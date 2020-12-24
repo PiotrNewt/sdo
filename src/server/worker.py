@@ -4,14 +4,19 @@ from network.dqn_agent import Agent
 from network.util import prepare_trees
 from collections import deque
 
+printDebugInfo = False
+windowSize = 5
+
 # worker represents a handler for a query
 class Worker(object):
     def __init__(self):
         super(Worker, self).__init__()
         self.numOfPlan = 22
-        self.agent = Agent(state_size=self.numOfPlan, action_size=7, seed=0)
+        self.agent = Agent(state_size=self.numOfPlan, action_size=8, seed=0)
+        self.state = ()
+        self.action = 0
         self.scores = []
-        self.scores_window = deque(maxlen=100)
+        self.scores_window = deque(maxlen=windowSize)
         self.score = 0
         self.eps = 1.0
         self.handleSQL = ""
@@ -19,29 +24,54 @@ class Worker(object):
         self.idxSeq = []
 
     def printInfo(self, request):
-        print("---------\ndone:\t{}\nsql:\t{}\nreward:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}".format(
-            request.done,
-            request.sql,
-            request.reward,
-            request.plan,
-            self.i_episode,
-            self.score
-        ))
+        if printDebugInfo:
+            print("---------\ndone:\t{}\nsql:\t{}\nlatency:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}".format(
+                request.done,
+                request.sql,
+                request.latency,
+                request.plan,
+                self.i_episode,
+                self.score
+            ))
         
+    # latrncy2reward trans the sql execution laterncy to reward.
+    def latency2reward(self, latency):
+        if latency < 0:
+            return int(latency * 10)
+
+        if latency == 0:
+            return 0
+        return int(5/latency)
+
     # handleReq handle the request from DB(Client).
     # and if it is the first time for sql to request, we set a handleSQL which is the sql form DB.
     # and we clean the random key when sql done.
     def handleReq(self, request):
-        print("handling")
-        if self.handleSQL != "" and self.handleSQL != request.sql:
-            # TODO: if a sql put in busy work, we do not process it.
+        if printDebugInfo:
+            print("handling")
+
+        # if just a done request without pre-process, we drop it.
+        # if self.handleSQL != "" and self.handleSQL != request.sql:
+        #     return None
+
+        # if a sql put in busy work, we do not process it.
+        if self.handleSQL == "" and request.done:
+            if printDebugInfo:
+                print("handleSQL:{}\nrequestSQL:{}\ndone?:{}".format(self.handleSQL, request.sql, request.done))
             return None
 
+        # if it is the first call, we reset the env
         if self.handleSQL == "":
             self.env_reset(request.sql)
+            self.state = self.deserialize(request.plan)
+        else:
+            # sync last step reward
+            reward = self.latency2reward(request.reward)
+            next_state = self.deserialize(request.plan)
+            self.agent.step(self.state, self.action, reward, next_state, request.done)
+            self.state = next_state
+            self.score += reward
 
-        # sync last step reward
-        self.score += request.reward
 
         self.printInfo(request)
 
@@ -50,9 +80,8 @@ class Worker(object):
             return self.done()
 
         # do train
-        state = self.deserialize(request.plan)
-        action = self.agent.act(state, self.eps)
-        return self.env_step(action)
+        self.action = self.agent.act(self.state, self.eps) + 4
+        return self.env_step(self.action)
 
     # done clean the worker, update epsilon, settlement score
     def done(self):
@@ -62,16 +91,19 @@ class Worker(object):
         res = lab_pb2.NextApplyIdxResponse(
             sql = self.handleSQL,
         )
-        print("*idxSeq*:\t{}\n".format(self.idxSeq))
+
+        if printDebugInfo:
+            print("*idxSeq*:\t{}\n".format(self.idxSeq))
         self.idxSeq = []
         self.handleSQL = ""
-        if self.i_episode % 10 == 0:
+        if self.i_episode % windowSize == 0:
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.i_episode, np.mean(self.scores_window)))
         return res
 
     # respense the rule index request with action(idx)
     def env_step(self, action):
-        print("*idx*:\t{}\n".format(action))
+        if printDebugInfo:
+            print("*idx*:\t{}\n".format(action))
         self.idxSeq.append(action)
         return lab_pb2.NextApplyIdxResponse(
             sql = self.handleSQL,
@@ -138,14 +170,6 @@ class Worker(object):
         if encode == "onehot":
             return self.onehot(value)
         return
-
-    # func for training (maybe we need to set checkpoint for using)
-    def training(self, plan):
-        state = self.deserialize(plan)
-        action = self.agent.act(state, self.eps)
-        next_state, reward, done = self.env_step(action)
-        state = next_state
-        pass
 
     # func for using model
     def using(self):
