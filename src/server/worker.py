@@ -4,7 +4,7 @@ from network.dqn_agent import Agent
 from network.util import prepare_trees
 from collections import deque
 
-printDebugInfo = False
+printDebugInfo = True
 windowSize = 5
 
 # worker represents a handler for a query
@@ -14,6 +14,7 @@ class Worker(object):
         self.numOfPlan = 22
         self.agent = Agent(state_size=self.numOfPlan, action_size=8, seed=0)
         self.state = ()
+        self.next_state = ()
         self.action = 0
         self.scores = []
         self.scores_window = deque(maxlen=windowSize)
@@ -25,7 +26,7 @@ class Worker(object):
 
     def printInfo(self, request):
         if printDebugInfo:
-            print("---------\ndone:\t{}\nsql:\t{}\nlatency:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}".format(
+            print("---------\ndone:\t{}\nsql:\t{}\nlate:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}".format(
                 request.done,
                 request.sql,
                 request.latency,
@@ -36,12 +37,11 @@ class Worker(object):
         
     # latrncy2reward trans the sql execution laterncy to reward.
     def latency2reward(self, latency):
+        if latency is None or latency == 0:
+            return 0
         if latency < 0:
             return int(latency * 10)
-
-        if latency == 0:
-            return 0
-        return int(5/latency)
+        return int(5.0/latency)
 
     # handleReq handle the request from DB(Client).
     # and if it is the first time for sql to request, we set a handleSQL which is the sql form DB.
@@ -60,18 +60,24 @@ class Worker(object):
                 print("handleSQL:{}\nrequestSQL:{}\ndone?:{}".format(self.handleSQL, request.sql, request.done))
             return None
 
+        # process with final plan
+        if request.done and request.latency == 0.0:
+            print("handle final plan\n")
+            self.next_state = self.deserialize(request.plan)
+            return None
+
         # if it is the first call, we reset the env
         if self.handleSQL == "":
             self.env_reset(request.sql)
             self.state = self.deserialize(request.plan)
         else:
             # sync last step reward
-            reward = self.latency2reward(request.reward)
-            next_state = self.deserialize(request.plan)
-            self.agent.step(self.state, self.action, reward, next_state, request.done)
-            self.state = next_state
+            reward = self.latency2reward(request.latency)
+            if request.plan is not None and request.plan != "":
+                self.next_state = self.deserialize(request.plan)
+            self.agent.step(self.state, self.action-4, reward, self.next_state, request.done)
+            self.state = self.next_state
             self.score += reward
-
 
         self.printInfo(request)
 
@@ -79,7 +85,7 @@ class Worker(object):
         if request.done:
             return self.done()
 
-        # do train
+        # get action
         self.action = self.agent.act(self.state, self.eps) + 4
         return self.env_step(self.action)
 

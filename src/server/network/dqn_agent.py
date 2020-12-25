@@ -10,7 +10,7 @@ import torch.optim as optim
 
 # Hyper parameters
 BUFFER_SIZE = int(1e5)  # replay buffer size
-BATCH_SIZE = 1         # minibatch size
+BATCH_SIZE = 3         # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 LR = 5e-4               # learning rate
@@ -18,6 +18,12 @@ UPDATE_EVERY = 4        # how often to update the network
 
 device = torch.device("cpu")
 # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+def tuple2device(inputTuple):
+    res = []
+    for item in inputTuple:
+        res.append(item.to(device))
+    return tuple(res)
 
 # Agent represents a deep q network agent.
 class Agent():
@@ -67,6 +73,8 @@ class Agent():
             eps (float): epsilon, for epsilon-greedy action selection
         """
         # state = torch.from_numpy(state).float().unsqueeze(0).to(device)
+        # state = (state[0].to(device), state[1].to(device))
+        state = tuple2device(state)
         self.qnetwork_local.eval()
         with torch.no_grad():
             action_values = self.qnetwork_local(state)
@@ -88,12 +96,16 @@ class Agent():
         states, actions, rewards, next_states, dones = experiences
 
         # Get max predicted Q values (for next states) from target model
-        Q_targets_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
-        # Compute Q targets for current states
+        # Q_targets_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
+        with torch.no_grad():
+            Q_targets_next = torch.cat(tuple([self.qnetwork_target(next_state).max(1)[0] for next_state in next_states]), 0).unsqueeze(1)
+        # Compute Q targets for current states (Tensor)
         Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
 
-        # Get expected Q values from local model
-        Q_expected = self.qnetwork_local(states).gather(1, actions)
+        # Get expected Q values from local model (Tensor)
+        # Q_expected = self.qnetwork_local(states).gather(1, actions)
+        # q_action = torch.cat(tuple([self.qnetwork_local(state) for state in states]), 0)
+        Q_expected = torch.cat(tuple([self.qnetwork_local(state) for state in states]), 0).gather(1, actions)
 
         # Compute loss
         loss = F.mse_loss(Q_expected, Q_targets)
@@ -145,10 +157,12 @@ class ReplayBuffer:
         """Randomly sample a batch of experiences from memory."""
         experiences = random.sample(self.memory, k=self.batch_size)
 
-        states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(device)
+        states = [tuple2device(e.state) for e in experiences if e is not None]
+        next_states = [tuple2device(e.next_state) for e in experiences if e is not None]
+        # states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(device)
         actions = torch.from_numpy(np.vstack([e.action for e in experiences if e is not None])).long().to(device)
         rewards = torch.from_numpy(np.vstack([e.reward for e in experiences if e is not None])).float().to(device)
-        next_states = torch.from_numpy(np.vstack([e.next_state for e in experiences if e is not None])).float().to(device)
+        # next_states = torch.from_numpy(np.vstack([e.next_state for e in experiences if e is not None])).float().to(device)
         dones = torch.from_numpy(np.vstack([e.done for e in experiences if e is not None]).astype(np.uint8)).float().to(device)
 
         return (states, actions, rewards, next_states, dones)

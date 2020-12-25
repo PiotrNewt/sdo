@@ -21,6 +21,9 @@
 import torch
 import torch.nn as nn
 
+device = torch.device("cpu")
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 class BinaryTreeConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(BinaryTreeConv, self).__init__()
@@ -40,7 +43,7 @@ class BinaryTreeConv(nn.Module):
         results = self.weights(expanded)
 
         # add a zero vector back on
-        zero_vec = torch.zeros((trees.shape[0], self.__out_channels)).unsqueeze(2)
+        zero_vec = torch.zeros((trees.shape[0], self.__out_channels)).unsqueeze(2).to(device)
         results = torch.cat((zero_vec, results), dim=2)
         return (results, orig_idxes)
 
