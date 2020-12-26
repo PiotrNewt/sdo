@@ -8,7 +8,7 @@ from concurrent import futures
 from worker import Worker
 
 # config
-port = "127.0.0.1:50051"
+port = "127.0.0.1:56066"
 
 class service(lab_pb2_grpc.AutoLogicalRulesApplyServicer):
     # init

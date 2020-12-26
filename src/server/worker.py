@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import lab_pb2
 from network.dqn_agent import Agent
 from network.util import prepare_trees
@@ -26,11 +27,12 @@ class Worker(object):
 
     def printInfo(self, request):
         if printDebugInfo:
-            print("---------\ndone:\t{}\nsql:\t{}\nlate:\t{}\nplan:\t{}\nepis:\t{}\nscore:\t{}".format(
+            print("---------\ndone:\t{}\nsql:\t{}\nlate:\t{}\nplan:\t{}\ndbstep:\t{}\nepis:\t{}\nscore:\t{}".format(
                 request.done,
                 request.sql,
                 request.latency,
                 request.plan,
+                request.stepIdx,
                 self.i_episode,
                 self.score
             ))
@@ -40,8 +42,8 @@ class Worker(object):
         if latency is None or latency == 0:
             return 0
         if latency < 0:
-            return int(latency * 10)
-        return int(5.0/latency)
+            return latency * 10
+        return -math.log10(latency)
 
     # handleReq handle the request from DB(Client).
     # and if it is the first time for sql to request, we set a handleSQL which is the sql form DB.
