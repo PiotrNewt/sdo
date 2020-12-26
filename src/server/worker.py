@@ -6,13 +6,13 @@ from collections import deque
 
 printDebugInfo = True
 windowSize = 5
+numOfPlan = 22
 
 # worker represents a handler for a query
 class Worker(object):
     def __init__(self):
         super(Worker, self).__init__()
-        self.numOfPlan = 22
-        self.agent = Agent(state_size=self.numOfPlan, action_size=8, seed=0)
+        self.agent = Agent(state_size=numOfPlan, action_size=8, seed=0)
         self.state = ()
         self.next_state = ()
         self.action = 0
@@ -45,7 +45,7 @@ class Worker(object):
 
     # handleReq handle the request from DB(Client).
     # and if it is the first time for sql to request, we set a handleSQL which is the sql form DB.
-    # and we clean the random key when sql done.
+    # and we clean the handleSQL when sql done.
     def handleReq(self, request):
         if printDebugInfo:
             print("handling")
@@ -63,18 +63,18 @@ class Worker(object):
         # process with final plan
         if request.done and request.latency == 0.0:
             print("handle final plan\n")
-            self.next_state = self.deserialize(request.plan)
+            self.next_state = self.request2state(request)
             return None
 
         # if it is the first call, we reset the env
         if self.handleSQL == "":
             self.env_reset(request.sql)
-            self.state = self.deserialize(request.plan)
+            self.state = self.request2state(request)
         else:
             # sync last step reward
             reward = self.latency2reward(request.latency)
             if request.plan is not None and request.plan != "":
-                self.next_state = self.deserialize(request.plan)
+                self.next_state = self.request2state(request)
             self.agent.step(self.state, self.action-4, reward, self.next_state, request.done)
             self.state = self.next_state
             self.score += reward
@@ -164,10 +164,10 @@ class Worker(object):
         if data == "":
             return None
         strs = str.split(data, "_")
-        return self.tree2trees([self.recursiveDeserialize(0, strs)])
+        return self.recursiveDeserialize(0, strs)
 
-    def onehot(self, v):
-        vec = np.zeros(self.numOfPlan)
+    def onehot(self, v, n = numOfPlan):
+        vec = np.zeros(n)
         vec[v] = 1
         return tuple(vec.tolist())
 
@@ -176,6 +176,12 @@ class Worker(object):
         if encode == "onehot":
             return self.onehot(value)
         return
+
+    # request2state trans request to state
+    def request2state(self, request):
+        stepIdxEncode = (self.feature2vec(request.stepIdx),)
+        planEncode = self.deserialize(request.plan)
+        return self.tree2trees([planEncode, stepIdxEncode])
 
     # func for using model
     def using(self):

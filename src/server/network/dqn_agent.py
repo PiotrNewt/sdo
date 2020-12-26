@@ -43,8 +43,8 @@ class Agent():
         self.seed = random.seed(seed)
 
         # Q-Network
-        self.qnetwork_local = TQNetwork(state_size, action_size, seed).to(device)
-        self.qnetwork_target = TQNetwork(state_size, action_size, seed).to(device)
+        self.qnetwork_local = TQNetwork(state_size, action_size, seed, tcnn_input_trees=2).to(device)
+        self.qnetwork_target = TQNetwork(state_size, action_size, seed, tcnn_input_trees=2).to(device)
         self.optimizer = optim.Adam(self.qnetwork_local.parameters(), lr=LR)
 
         # Replay memory

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='mlpb',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\tlab.proto\x12\x04mlpb\"]\n\x13NextApplyIdxRequest\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07latency\x18\x02 \x01(\x01\x12\x0c\n\x04\x64one\x18\x03 \x01(\x08\x12\x0c\n\x04plan\x18\x04 \x01(\t\x12\x0c\n\x04\x66lag\x18\x05 \x01(\t\"4\n\x14NextApplyIdxResponse\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x02 \x01(\x03\x32j\n\x15\x41utoLogicalRulesApply\x12Q\n\x16getNextApplyIdxRequest\x12\x19.mlpb.NextApplyIdxRequest\x1a\x1a.mlpb.NextApplyIdxResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\tlab.proto\x12\x04mlpb\"n\n\x13NextApplyIdxRequest\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07latency\x18\x02 \x01(\x01\x12\x0c\n\x04\x64one\x18\x03 \x01(\x08\x12\x0c\n\x04plan\x18\x04 \x01(\t\x12\x0c\n\x04\x66lag\x18\x05 \x01(\t\x12\x0f\n\x07stepIdx\x18\x06 \x01(\x03\"4\n\x14NextApplyIdxResponse\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x02 \x01(\x03\x32j\n\x15\x41utoLogicalRulesApply\x12Q\n\x16getNextApplyIdxRequest\x12\x19.mlpb.NextApplyIdxRequest\x1a\x1a.mlpb.NextApplyIdxResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -68,6 +68,13 @@ _NEXTAPPLYIDXREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='stepIdx', full_name='mlpb.NextApplyIdxRequest.stepIdx', index=5,
+      number=6, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -81,7 +88,7 @@ _NEXTAPPLYIDXREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=112,
+  serialized_end=129,
 )
 
 
@@ -118,8 +125,8 @@ _NEXTAPPLYIDXRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=114,
-  serialized_end=166,
+  serialized_start=131,
+  serialized_end=183,
 )
 
 DESCRIPTOR.message_types_by_name['NextApplyIdxRequest'] = _NEXTAPPLYIDXREQUEST
@@ -148,8 +155,8 @@ _AUTOLOGICALRULESAPPLY = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=168,
-  serialized_end=274,
+  serialized_start=185,
+  serialized_end=291,
   methods=[
   _descriptor.MethodDescriptor(
     name='getNextApplyIdxRequest',
