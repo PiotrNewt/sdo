@@ -24,13 +24,17 @@ class Worker(object):
         self.handleSQL = ""
         self.i_episode = 0
         self.idxSeq = []
+        self.sqlExeLatency = 0
+        self.waitFinalLatency = False
 
     def printInfo(self, request):
         if printDebugInfo:
-            print("---------\ndone:\t{}\nsql:\t{}\nlate:\t{}\nplan:\t{}\ndbstep:\t{}\nepis:\t{}\nscore:\t{}".format(
+            print("---------\ndone:\t\t{}\nsql:\t\t{}\nlatency:\t{}\nparsLatency:\t{}\ncompLatency:\t{}\nplan:\t\t{}\ndbstep:\t\t{}\nepis:\t\t{}\nscore:\t\t{}".format(
                 request.done,
                 request.sql,
                 request.latency,
+                request.parserLatency,
+                request.compileLatency,
                 request.plan,
                 request.stepIdx,
                 self.i_episode,
@@ -38,12 +42,18 @@ class Worker(object):
             ))
         
     # latrncy2reward trans the sql execution laterncy to reward.
-    def latency2reward(self, latency):
-        if latency is None or latency == 0:
+    def latency2reward(self, request):
+        if request.latency is None or request.latency == 0:
             return 0
-        if latency < 0:
-            return latency * 10
-        return -math.log10(latency)
+        if request.latency < 0:
+            return request.latency * 10
+        realLatency = request.latency - request.compileLatency - request.parserLatency
+        late = realLatency/1000000000
+        self.sqlExeLatency = late
+        # for tpch-q1
+        if late > 2:
+            return -(late-2)
+        return 2/(late-1)
 
     # handleReq handle the request from DB(Client).
     # and if it is the first time for sql to request, we set a handleSQL which is the sql form DB.
@@ -62,10 +72,20 @@ class Worker(object):
                 print("handleSQL:{}\nrequestSQL:{}\ndone?:{}".format(self.handleSQL, request.sql, request.done))
             return None
 
+        # handle the fail query!
+        if self.waitFinalLatency and request.done:
+            reward = self.latency2reward(-2)
+            self.agent.step(self.state, self.action-4, reward, self.next_state, True)
+            self.score += reward
+            _ = self.done()  # clean the fail query
+
         # process with final plan
         if request.done and request.latency == 0.0:
-            print("handle final plan\n")
+            if printDebugInfo:
+                print("---------\n*handle final plan*\n")
             self.next_state = self.request2state(request)
+            # use to mark setting the fail query reward and reset the v-env.
+            self.waitFinalLatency = True
             return None
 
         # if it is the first call, we reset the env
@@ -74,7 +94,7 @@ class Worker(object):
             self.state = self.request2state(request)
         else:
             # sync last step reward
-            reward = self.latency2reward(request.latency)
+            reward = self.latency2reward(request)
             if request.plan is not None and request.plan != "":
                 self.next_state = self.request2state(request)
             self.agent.step(self.state, self.action-4, reward, self.next_state, request.done)
@@ -87,7 +107,7 @@ class Worker(object):
         if request.done:
             return self.done()
 
-        # get action
+        # get action, in tidb, rule idx will start at 4, so we add 4 and cut down it when model step.
         self.action = self.agent.act(self.state, self.eps) + 4
         return self.env_step(self.action)
 
@@ -99,19 +119,19 @@ class Worker(object):
         res = lab_pb2.NextApplyIdxResponse(
             sql = self.handleSQL,
         )
-
+        if self.i_episode % windowSize == 0:
+            print('\rEpisode {}\tAverage Score: {:.2f}\tLatency: {}\tIdxSeq: {}'.format(self.i_episode, np.mean(self.scores_window), self.sqlExeLatency, self.idxSeq))
         if printDebugInfo:
             print("*idxSeq*:\t{}\n".format(self.idxSeq))
         self.idxSeq = []
         self.handleSQL = ""
-        if self.i_episode % windowSize == 0:
-            print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.i_episode, np.mean(self.scores_window)))
+        self.waitFinalLatency = False
         return res
 
     # respense the rule index request with action(idx)
     def env_step(self, action):
         if printDebugInfo:
-            print("*idx*:\t{}\n".format(action))
+            print("*idx*:\t\t{}\n".format(action))
         self.idxSeq.append(action)
         return lab_pb2.NextApplyIdxResponse(
             sql = self.handleSQL,
