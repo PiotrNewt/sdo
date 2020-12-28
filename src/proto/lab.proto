@@ -6,14 +6,14 @@ service AutoLogicalRulesApply {
 }
 
 message NextApplyIdxRequest {
-    string sql = 1;
-    int64  latency = 2;
-    int64  parserLatency = 3;
-    int64  compileLatency = 4;
-    bool   done = 5;
-    string plan = 6;
-    string flag = 7;
-    int64  stepIdx = 8;
+    string  sql = 1;
+    int64   latency = 2;
+    int64   parserLatency = 3;
+    int64   compileLatency = 4;
+    bool    done = 5;
+    string  plan = 6;
+    fixed64 flag = 7;
+    int64   stepIdx = 8;
 }
 
 message NextApplyIdxResponse {

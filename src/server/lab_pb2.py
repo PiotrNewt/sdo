@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='mlpb',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\tlab.proto\x12\x04mlpb\"\x9d\x01\n\x13NextApplyIdxRequest\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07latency\x18\x02 \x01(\x03\x12\x15\n\rparserLatency\x18\x03 \x01(\x03\x12\x16\n\x0e\x63ompileLatency\x18\x04 \x01(\x03\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\x12\x0c\n\x04plan\x18\x06 \x01(\t\x12\x0c\n\x04\x66lag\x18\x07 \x01(\t\x12\x0f\n\x07stepIdx\x18\x08 \x01(\x03\"4\n\x14NextApplyIdxResponse\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x02 \x01(\x03\x32j\n\x15\x41utoLogicalRulesApply\x12Q\n\x16getNextApplyIdxRequest\x12\x19.mlpb.NextApplyIdxRequest\x1a\x1a.mlpb.NextApplyIdxResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\tlab.proto\x12\x04mlpb\"\x9d\x01\n\x13NextApplyIdxRequest\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07latency\x18\x02 \x01(\x03\x12\x15\n\rparserLatency\x18\x03 \x01(\x03\x12\x16\n\x0e\x63ompileLatency\x18\x04 \x01(\x03\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\x12\x0c\n\x04plan\x18\x06 \x01(\t\x12\x0c\n\x04\x66lag\x18\x07 \x01(\x06\x12\x0f\n\x07stepIdx\x18\x08 \x01(\x03\"4\n\x14NextApplyIdxResponse\x12\x0b\n\x03sql\x18\x01 \x01(\t\x12\x0f\n\x07ruleIdx\x18\x02 \x01(\x03\x32j\n\x15\x41utoLogicalRulesApply\x12Q\n\x16getNextApplyIdxRequest\x12\x19.mlpb.NextApplyIdxRequest\x1a\x1a.mlpb.NextApplyIdxResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -77,8 +77,8 @@ _NEXTAPPLYIDXREQUEST = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='flag', full_name='mlpb.NextApplyIdxRequest.flag', index=6,
-      number=7, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      number=7, type=6, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),

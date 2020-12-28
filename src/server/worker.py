@@ -1,5 +1,4 @@
 import numpy as np
-import math
 import lab_pb2
 from network.dqn_agent import Agent
 from network.util import prepare_trees
@@ -188,22 +187,33 @@ class Worker(object):
         strs = str.split(data, "_")
         return self.recursiveDeserialize(0, strs)
 
-    def onehot(self, v, n = numOfPlan):
+    def onehot(self, v, n):
         vec = np.zeros(n)
         vec[v] = 1
         return tuple(vec.tolist())
 
+    def uint2onehot(self, v, n):
+        vec = np.zeros(n)
+        for i in range(0,n):
+            if v & (1 << i) != 0:
+                vec[i] = 1
+        return tuple(vec.tolist())
+
     # func for feature to vector(or matrix)
-    def feature2vec(self, value, encode="onehot"):
+    def feature2vec(self, value, encode="onehot", n = numOfPlan):
         if encode == "onehot":
-            return self.onehot(value)
+            return self.onehot(value, n)
+        if encode == "u2onehot":
+            return self.uint2onehot(value, n)
         return
 
     # request2state trans request to state
     def request2state(self, request):
-        stepIdxEncode = (self.feature2vec(request.stepIdx),)
+        stepIdxEncode = self.feature2vec(request.stepIdx, encode="onehot", n=8)
+        flagEncode = self.feature2vec(request.flag, encode="u2onehot", n=14)
+        step_flagEncode = (stepIdxEncode+flagEncode,)
         planEncode = self.deserialize(request.plan)
-        return self.tree2trees([planEncode, stepIdxEncode])
+        return self.tree2trees([planEncode, step_flagEncode])
 
     # func for using model
     def using(self):
